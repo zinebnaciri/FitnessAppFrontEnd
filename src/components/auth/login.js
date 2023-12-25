@@ -3,41 +3,49 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { Navigate } from 'react-router-dom';
 
 
 const defaultTheme = createTheme();
 
-export default function SignInSide() {
-  const handleSubmit = (event) => {
+export default function Login() {
+  
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+    const formData = new FormData(event.currentTarget);
+    const userData = {
+        username: formData.get('email'),
+        password: formData.get('password'),
+    };
+
+    try {
+        const response = await fetch('http://localhost:8080/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Login successful:', result);
+            Navigate('/dashboard');
+        } else {
+            const error = await response.json();
+            console.error('Login failed:', error.message);
+        }
+    } catch (error) {
+        console.error('Error during login:', error.message);
+    }
+};
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -49,7 +57,7 @@ export default function SignInSide() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(../../assets/images/fitness-1024x614 1)',
+            backgroundImage: 'url(images/logo1.png)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -67,11 +75,11 @@ export default function SignInSide() {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              <LockOutlinedIcon />
-            </Avatar>
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main', width: 56, height: 56 }}>
+      <img src='images/logo.png' alt="Your Alt Text" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+    </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+            ZADFITNESS
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
@@ -79,7 +87,7 @@ export default function SignInSide() {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="UserName"
                 name="email"
                 autoComplete="email"
                 autoFocus
@@ -94,10 +102,7 @@ export default function SignInSide() {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
+             
               <Button
                 type="submit"
                 fullWidth
@@ -107,22 +112,19 @@ export default function SignInSide() {
                 Sign In
               </Button>
               <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
+                
                 <Grid item>
                   <Link href="#" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
+           
             </Box>
           </Box>
         </Grid>
       </Grid>
+    
     </ThemeProvider>
   );
 }

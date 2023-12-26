@@ -1,33 +1,136 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import StickyFooter from '../footer';
+import axios from 'axios';
+import { Link,useHistory  } from 'react-router-dom';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import RadioGroup from '@mui/material/RadioGroup';
+import Radio from '@mui/material/Radio';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import { FormControlLabel } from '@mui/material';
+import { DesktopDatePicker } from '@mui/x-date-pickers';
+import { toast, ToastContainer } from 'react-toastify';
 
-
-
-
-
+import 'react-toastify/dist/ReactToastify.css';
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
+   
+    const [formData, setFormData] = useState({
+        firstname: '',
+        lastname: '',
+        username: '',
+        email: '',
+        password: '',
+        dateOfBirth: null,
+        gender: '',
+        height: '',
+        weight: '',
+    });
+
+    const handleSuccess = () => {
+        toast.success('Registration successful! Redirecting to login...', {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
         });
+
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 3000);
+    };
+    const handleFailure = (error) => {
+        toast.error(`Registration failed: ${error.message}`, {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+        });
+    };
+    const validateForm = () => {
+       
+        if (!formData.firstname || !formData.lastname|| !formData.username || !formData.email || !formData.password) {
+            toast.error('Please fill in all required fields.');
+            return false;
+        }
+
+        return true;
+    };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://localhost:8080/api/auth/register', formData);
+            console.log(response.data);
+            handleSuccess();
+        } catch (error) {
+            console.error('Registration failed', error);
+            handleFailure(error);
+        }
+    };
+
+    const handleDateChange = (date) => {
+        if (date) {
+
+            const jsDate = new Date(date);
+            const formattedDate = jsDate.toLocaleDateString('en-CA');
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                dateOfBirth: formattedDate,
+            }));
+        } else {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                dateOfBirth: null,
+            }));
+        }
+    };
+
+
+
+    const handleGenderChange = (event) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            gender: event.target.value,
+        }));
+    };
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+        }));
+    };
+    const handleWeightChange = (event) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            weight: event.target.value,
+        }));
+    };
+
+    const handleHeightChange = (event) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            height: event.target.value,
+        }));
     };
 
     return (
@@ -43,7 +146,11 @@ export default function SignUp() {
                     }}
                 >
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <img src='images/logo.png' alt="Your Alt Text" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img
+                            src="images/logo.png"
+                            alt="Your Alt Text"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign up
@@ -53,35 +160,42 @@ export default function SignUp() {
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     autoComplete="given-name"
-                                    name="firstName"
+                                    name="firstname"
                                     required
                                     fullWidth
-                                    id="firstName"
+                                    id="firstname"
                                     label="First Name"
                                     autoFocus
+                                    value={formData.firstname}
+                                    onChange={handleInputChange}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     required
                                     fullWidth
-                                    id="lastName"
+                                    id="lastname"
                                     label="Last Name"
-                                    name="lastName"
+                                    name="lastname"
                                     autoComplete="family-name"
+                                    value={formData.lastname}
+                                    onChange={handleInputChange}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+
+                            <Grid item xs={12} sm={6}>
                                 <TextField
                                     required
                                     fullWidth
-                                    id="email"
-                                    label="Email Address"
-                                    name="email"
-                                    autoComplete="email"
+                                    id="username"
+                                    label="UserName"
+                                    name="username"
+                                    autoComplete="username"
+                                    value={formData.username}
+                                    onChange={handleInputChange}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sm={6}>
                                 <TextField
                                     required
                                     fullWidth
@@ -90,6 +204,66 @@ export default function SignUp() {
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
+                                    value={formData.password}
+                                    onChange={handleInputChange}
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DesktopDatePicker
+                                        label="Date of Birth"
+                                        inputFormat="yyyy/MM/dd"
+                                        value={formData.dateOfBirth || null}
+                                        onChange={(newValue) => handleDateChange(newValue)}
+                                        renderInput={(params) => <TextField {...params} />}
+                                    />
+                                </LocalizationProvider>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl component="fieldset">
+                                    <FormLabel component="legend">Gender</FormLabel>
+                                    <RadioGroup row aria-label="gender" name="gender" value={formData.gender} onChange={handleGenderChange}>
+                                        <FormControlLabel value="female" control={<Radio />} label="Female" />
+                                        <FormControlLabel value="male" control={<Radio />} label="Male" />
+                                    </RadioGroup>
+                                </FormControl>
+                            </Grid> <Grid item xs={12}>
+                                <TextField
+                                    
+                                    fullWidth
+                                    type="number"
+                                    id="height"
+                                    label="Height (cm)"
+                                    name="height"
+                                    autoComplete="height"
+                                    value={formData.height}
+                                    onChange={handleHeightChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    
+                                    fullWidth
+                                    type="number"
+                                    id="weight"
+                                    label="Weight (kg)"
+                                    name="weight"
+                                    autoComplete="weight"
+                                    value={formData.weight}
+                                    onChange={handleWeightChange}
                                 />
                             </Grid>
 
@@ -104,7 +278,7 @@ export default function SignUp() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link href="/" variant="body2">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>
@@ -113,8 +287,8 @@ export default function SignUp() {
                 </Box>
 
             </Container>
-            <StickyFooter />
+
         </ThemeProvider>
 
     );
-}
+} 

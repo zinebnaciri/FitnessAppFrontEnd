@@ -8,6 +8,7 @@ import Profile from './components/auth/Profile';
 import Workouts from './components/Workouts';
 import Login from './components/auth/login';
 import SignUp from './components/auth/signup';
+import Measurments from './components/measurments';
 
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/profile" element={<Profile/>} />
         <Route path="/diet" element={<Diet/>} />
         <Route path="/goals" element={<Goals/>} />
+        <Route path="/measurments" element={<Measurments/>} />
       </Routes>
    
   );

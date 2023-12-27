@@ -19,6 +19,26 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import FlagIcon from '@mui/icons-material/Flag';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 
+const handleLogout = async () => {
+    try {
+        // Send the logout request to the server
+        const response = await fetch('http://localhost:8080/api/auth/logout', {
+            method: 'POST',
+            // Add any required headers or authentication tokens
+        });
+
+        // Check if the logout was successful
+        if (response.ok) {
+            // Logout successful, trigger client-side redirect
+            window.location.href = '/'; // Replace '/login' with the actual path of your login page
+        } else {
+            // Handle logout failure
+            console.error('Logout failed:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error during logout:', error.message);
+    }
+};
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -97,8 +117,9 @@ export default function Layout({ children }) {
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to="/profile">Profile</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to="/measurments">Measurments</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
     );
 

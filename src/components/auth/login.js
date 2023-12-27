@@ -55,6 +55,7 @@ export default function Login() {
       if (response.ok) {
         const result = await response.json();
         console.log('Login successful:', result);
+        localStorage.setItem('userId', result.userId);
 
         navigate('/dashboard');
         toast.success('Login successful');

@@ -27,9 +27,20 @@ export default function Login() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const validateForm = () => {
+       
+    if (!formData.email || !formData.password) {
+        toast.error('Please fill in all fields.');
+        return false;
+    }
 
+    return true;
+};
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm()) {
+      return;
+  }
     setLoading(true);
 
     try {
@@ -50,7 +61,7 @@ export default function Login() {
             } else {
         const errorData = await response.json();
         console.error('Login failed:', errorData.message);
-        toast.error(errorData.message || 'Login failed');
+        toast.error( 'UserName or Password are incorrect! please try again');
       }
     } catch (error) {
       console.error('Error during login:', error.message);

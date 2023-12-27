@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import { Link,useHistory  } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -22,9 +22,19 @@ import { toast, ToastContainer } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 const defaultTheme = createTheme();
+const styles = {
+    container: {
+      height: '100vh', 
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center', 
+      alignItems: 'center',
+      marginBottom: '100px', 
+    },
+  };
 
 export default function SignUp() {
-   
+
     const [formData, setFormData] = useState({
         firstname: '',
         lastname: '',
@@ -62,8 +72,8 @@ export default function SignUp() {
         });
     };
     const validateForm = () => {
-       
-        if (!formData.firstname || !formData.lastname|| !formData.username || !formData.email || !formData.password) {
+
+        if (!formData.firstname || !formData.lastname || !formData.username || !formData.email || !formData.password) {
             toast.error('Please fill in all required fields.');
             return false;
         }
@@ -135,7 +145,7 @@ export default function SignUp() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="xs" sx={styles.container}>
                 <CssBaseline />
                 <Box
                     sx={{
@@ -242,7 +252,7 @@ export default function SignUp() {
                                 </FormControl>
                             </Grid> <Grid item xs={12}>
                                 <TextField
-                                    
+
                                     fullWidth
                                     type="number"
                                     id="height"
@@ -255,7 +265,7 @@ export default function SignUp() {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                    
+
                                     fullWidth
                                     type="number"
                                     id="weight"
@@ -278,7 +288,7 @@ export default function SignUp() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="/" variant="body2">
+                                <Link to="/" variant="body2">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>

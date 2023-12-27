@@ -21,18 +21,17 @@ import QueryStatsIcon from '@mui/icons-material/QueryStats';
 
 const handleLogout = async () => {
     try {
-        // Send the logout request to the server
+
         const response = await fetch('http://localhost:8080/api/auth/logout', {
             method: 'POST',
-            // Add any required headers or authentication tokens
+
         });
 
-        // Check if the logout was successful
         if (response.ok) {
-            // Logout successful, trigger client-side redirect
-            window.location.href = '/'; // Replace '/login' with the actual path of your login page
+
+            window.location.href = '/';
         } else {
-            // Handle logout failure
+
             console.error('Logout failed:', response.statusText);
         }
     } catch (error) {
@@ -79,12 +78,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 const Logo = styled('img')({
-    width: '50px',   // Set a small width
+    width: '50px',
     height: '50px',
 
 });
 const Title = styled(Typography)({
-    color: 'black', // Set text color
+    color: 'black',
 });
 export default function Layout({ children }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -158,25 +157,25 @@ export default function Layout({ children }) {
                         backgroundColor:
                             location.pathname === '/workouts' ? '#f97316' : 'inherit',
                     }}>
-                        <SportsGymnasticsIcon sx={{marginRight:'8px'}} />
+                        <SportsGymnasticsIcon sx={{ marginRight: '8px' }} />
                         <ListItemText primary="Workouts" />
                     </ListItem>
                     <ListItem button component={Link} to="/diet" sx={{
                         backgroundColor:
                             location.pathname === '/diet' ? '#f97316' : 'inherit',
                     }}>
-                        <RestaurantIcon sx={{marginRight:'8px'}} />
+                        <RestaurantIcon sx={{ marginRight: '8px' }} />
                         <ListItemText primary="Diet Plans" />
                     </ListItem>
                     <ListItem button component={Link} to="/goals" sx={{
                         backgroundColor:
                             location.pathname === '/goals' ? '#f97316' : 'inherit',
                     }}>
-                        <FlagIcon sx={{marginRight:'8px'}} />
+                        <FlagIcon sx={{ marginRight: '8px' }} />
                         <ListItemText primary="Goals" />
                     </ListItem>
                     <ListItem button component={Link} to="/progress">
-                        <QueryStatsIcon sx={{marginRight:'8px'}} />
+                        <QueryStatsIcon sx={{ marginRight: '8px' }} />
                         <ListItemText primary="Progress" />
                     </ListItem>
 
@@ -219,7 +218,7 @@ export default function Layout({ children }) {
                     </Toolbar>
                 </AppBar>
 
-                {/* Content of the page */}
+
                 <Box sx={{ mt: 3 }}>
                     {children}
                 </Box>
